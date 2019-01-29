@@ -19,7 +19,6 @@ public class PostDto {
 
 
 
-
     public String getPostId() {
         return postId;
     }

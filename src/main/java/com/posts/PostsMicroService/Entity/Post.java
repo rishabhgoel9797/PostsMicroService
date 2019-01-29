@@ -22,7 +22,15 @@ public class Post {
     private Date date;
     private List<String> postLikes;
 
+    private String type;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     private List<PostsComments> postsComments;
 
@@ -72,7 +80,7 @@ public class Post {
         return null;
     }
 
-    public void setDate(Date date) {
+    public void setDate() {
 
                 this.date = new java.util.Date();
 
@@ -85,6 +93,9 @@ public class Post {
     }
 
     public void setPostLikes(List<String> postLikes) {
+
+
+
         this.postLikes = postLikes;
     }
 
