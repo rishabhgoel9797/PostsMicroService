@@ -7,5 +7,8 @@ public interface  PostService {
     void deletePost(String postId);
     void editPost(Post post);
     Post getPostDetails(String postId);
+    void addLikes(String postId,String userId);
+    void dislike(String postId,String userId);
+    Boolean getLikeStatus(String postId,String userId);
 
 }

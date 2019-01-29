@@ -30,36 +30,63 @@ public class PostController {
         return new ResponseEntity<String>("Added New Post", HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/getPost/{id}" ,method = RequestMethod.GET)
-    public Post getPostDetails(@PathVariable String id)
-    {
-      Post post=postService.getPostDetails(id);
+    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
+    public Post getPostDetails(@PathVariable String id) {
+        Post post = postService.getPostDetails(id);
         return post;
     }
 
-    @RequestMapping(value ="/deletePost/{id}",method = RequestMethod.DELETE)
-    public ResponseEntity<String> deletePost(@PathVariable String id)
-    {
+    @RequestMapping(value = "/deletePost/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deletePost(@PathVariable String id) {
         postService.deletePost(id);
-      return new ResponseEntity<String>("Deleted post",HttpStatus.OK);
+        return new ResponseEntity<String>("Deleted post", HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<String> editPost( @PathVariable String id,@RequestBody PostDto postDto) {
-String description=postDto.getDescription();
-        Post post=postService.getPostDetails(id);
-       post.setDescription(description);
+    public ResponseEntity<String> editPost(@PathVariable String id, @RequestBody PostDto postDto) {
+        String description = postDto.getDescription();
+        Post post = postService.getPostDetails(id);
+        post.setDescription(description);
         postService.editPost(post);
         return new ResponseEntity<String>("Edited ", HttpStatus.OK);
     }
-    @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
-    public Post getFeedDetails(@PathVariable String id)
+//    @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
+//    public Post getFeedDetails(@PathVariable String id)
+//    {
+//        RestTemplate restTemplate1=new RestTemplate();
+//    }
+//        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
+//        Post post=postService.getPostDetails(id);
+//        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
+//    }
+    @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
+    public ResponseEntity<String> likePost(@PathVariable String postId,@PathVariable String userId)
+    {   try {
+        if (postId.isEmpty() || userId.isEmpty())
+            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+        postService.addLikes(postId, userId);
+        return new ResponseEntity<>("Liked", HttpStatus.ACCEPTED);
+    }catch (Exception e)
     {
-        RestTemplate restTemplate1=new RestTemplate();
+        return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
     }
-        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
-        Post post=postService.getPostDetails(id);
-        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
     }
+    @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.DELETE)
+    public ResponseEntity<String> dislikePost(@PathVariable String postId,@PathVariable String userId)
+    {
+        try{
+            if (postId.isEmpty() || userId.isEmpty())
+                return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+            postService.dislike(postId,userId);
+            return new ResponseEntity<>("disLiked", HttpStatus.ACCEPTED);
+        }catch (Exception e)
+        {
+            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
 }

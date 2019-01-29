@@ -7,6 +7,7 @@ package com.posts.PostsMicroService.Entity;
         import java.text.DateFormat;
         import java.text.SimpleDateFormat;
         import java.util.Date;
+        import java.util.List;
 
 @Document(collection = "Post")
 public class Post {
@@ -18,6 +19,7 @@ public class Post {
     private String description;
     private String createdBy;
     private Date date;
+    private List<String> postLikes;
 
     public String getPostId() {
         return postId;
@@ -73,6 +75,14 @@ public class Post {
 
     }
 
+    public List<String> getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(List<String> postLikes) {
+        this.postLikes = postLikes;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -82,6 +92,7 @@ public class Post {
                 ", description='" + description + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", date=" + date +
+                ", postLikes=" + postLikes +
                 '}';
     }
 }
