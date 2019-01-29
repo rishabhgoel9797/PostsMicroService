@@ -19,9 +19,8 @@ public class PostController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<String> addPost(@RequestBody PostDto postDto) {
         Post post = new Post();
-        postDto.setTimestamp();
+        postDto.setDate();
         BeanUtils.copyProperties(postDto, post);
-
         postService.addPost(post);
         return new ResponseEntity<String>("Added New Post", HttpStatus.CREATED);
     }
@@ -29,24 +28,24 @@ public class PostController {
     @RequestMapping(value="/getPost/{id}" ,method = RequestMethod.GET)
     public Post getPostDetails(@PathVariable String id)
     {
+      Post post=postService.getPostDetails(id);
+      post.toString();
         return postService.getPostDetails(id);
     }
 
-    @RequestMapping(value ="/deleteProduct/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value ="/deletePost/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<String> deletePost(@PathVariable String id)
     {
         postService.deletePost(id);
-      return new ResponseEntity<String>("Deletd product",HttpStatus.OK);
+      return new ResponseEntity<String>("Deleted product",HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-    public ResponseEntity<String> editPost( @PathVariable String id, @RequestBody String description) {
-       Post post=postService.getPostDetails(id);
-
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<String> editPost( @PathVariable String id,@RequestBody PostDto postDto) {
+String description=postDto.getDescription();
+        Post post=postService.getPostDetails(id);
        post.setDescription(description);
-//       post.setPostId(id);
-//       post.setCreatedBy(post.getCreatedBy());
         postService.editPost(post);
         return new ResponseEntity<String>("Edited ", HttpStatus.OK);
     }
