@@ -78,7 +78,6 @@ public class PostDto {
     public void setPostLikes(List<String> postLikes) {
         this.postLikes = postLikes;
     }
-
     @Override
     public String toString() {
         return "PostDto{" +
