@@ -2,13 +2,15 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
+import java.util.Date;
+
 public class PostDto {
     private String postId;
     private String userId;
-    private String type;
+    private String url;
     private String description;
     private String createdBy;
-    private Timestamp timestamp ;
+    private Date date ;
 
     public String getPostId() {
         return postId;
@@ -26,12 +28,12 @@ public class PostDto {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+    public String getUrl() {
+        return url;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -50,11 +52,11 @@ public class PostDto {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Long getDate() {
+        return date.getTime();
     }
 
-    public void setTimestamp() {
-        this.timestamp =  new Timestamp(System.currentTimeMillis());
+    public void setDate() {
+        this.date = new java.util.Date();
     }
 }

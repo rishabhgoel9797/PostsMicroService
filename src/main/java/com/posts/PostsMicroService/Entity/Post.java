@@ -3,16 +3,19 @@ package com.posts.PostsMicroService.Entity;
         import com.sun.jmx.snmp.Timestamp;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
+
+        import java.util.Date;
+
 @Document(collection = "Post")
 public class Post {
 
     @Id
     private String postId;
     private String userId;
-    private String type;
+    private String url;
     private String description;
     private String createdBy;
-    private Timestamp timestamp ;
+    private Date date;
 
     public String getPostId() {
         return postId;
@@ -30,12 +33,13 @@ public class Post {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+
+    public String getUrl() {
+        return url;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -54,11 +58,24 @@ public class Post {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+
+    public Long getDate() {
+        return date.getTime();
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp =  timestamp;
+    public void setDate(Date date) {
+        this.date = new java.util.Date();
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", url='" + url + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", date=" + date +
+                '}';
     }
 }
