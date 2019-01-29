@@ -21,6 +21,7 @@ public class Post {
     private Date date;
     private List<String> postLikes;
 
+
     public String getPostId() {
         return postId;
     }
