@@ -2,14 +2,13 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PostDto {
     private String postId;
     private String userId;
     private String url;
+    private String type;
     private String description;
     private String createdBy;
     private Date date ;
@@ -50,17 +49,23 @@ public class PostDto {
         return createdBy;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
     public Date getDate() {
-        return this.date;
+        return date;
     }
 
     public void setDate() {
-
         this.date = new java.util.Date();
-
     }
 }

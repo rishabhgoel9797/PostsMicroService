@@ -1,5 +1,6 @@
 package com.posts.PostsMicroService.Services.ServiceImpl;
 
+import com.posts.PostsMicroService.DTO.ResponseDto;
 import com.posts.PostsMicroService.Entity.Post;
 import com.posts.PostsMicroService.Repository.PostRepository;
 import com.posts.PostsMicroService.Services.PostService;
@@ -13,23 +14,60 @@ public class PostServiceImpl implements PostService {
     PostRepository postRepository;
 
     @Override
-    public void addPost(Post post) {
-        postRepository.insert(post);
+    public ResponseDto deletePost(String postId) {
 
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            postRepository.delete(postId);
+            responseDto.setVariables(true, 200, "Deleted post successfully.");
+
+        } catch (Exception ex){
+
+            responseDto.setVariables(false, 500, "Unable to delete the post.");
+        }
+
+        return responseDto;
     }
 
     @Override
-    public void deletePost(String postId) {
-postRepository.delete(postId);
-    }
+    public ResponseDto editPost(Post post) {
 
-    @Override
-    public void editPost(Post post) {
-        postRepository.save(post);
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            postRepository.save(post);
+
+            responseDto.setVariables(true, 200, "Post edited successfully.");
+        } catch (Exception ex){
+
+            responseDto.setVariables(false, 500, "Server error. Please try again later.");
+        }
+
+        return responseDto;
+
     }
 
     @Override
     public Post getPostDetails(String postId) {
         return postRepository.findOne(postId);
     }
+
+    public ResponseDto addPost(Post post){
+
+        ResponseDto responseDto = new ResponseDto();
+
+        try {
+            postRepository.insert(post);
+
+            responseDto.setVariables(true, 200, "Posted Successfully.");
+
+        } catch (Exception ex){
+
+            responseDto.setVariables(false, 500, ex.getMessage());
+        }
+
+        return responseDto;
+    }
+
+
 }
