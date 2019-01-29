@@ -7,6 +7,11 @@ import com.posts.PostsMicroService.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -22,7 +27,7 @@ public class PostServiceImpl implements PostService {
             postRepository.delete(postId);
             responseDto.setVariables(true, 200, "Deleted post successfully.");
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
 
             responseDto.setVariables(false, 500, "Unable to delete the post.");
         }
@@ -38,7 +43,7 @@ public class PostServiceImpl implements PostService {
             postRepository.save(post);
 
             responseDto.setVariables(true, 200, "Post edited successfully.");
-        } catch (Exception ex){
+        } catch (Exception ex) {
 
             responseDto.setVariables(false, 500, "Server error. Please try again later.");
         }
@@ -49,10 +54,31 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostDetails(String postId) {
+
         return postRepository.findOne(postId);
     }
+    @Override
+    public List<Post> getUserPost(String userId) {
 
-    public ResponseDto addPost(Post post){
+        return postRepository.findPostByUserId(userId);
+    }
+    @Override
+    public List<Post> getfeed(List<String> userIds) {
+
+        List<Post> post=new ArrayList<Post>();
+        List<Post> post1=null;
+        for(String id:userIds){
+         post1=postRepository.findPostByUserId(id);
+         for(Post post2:post1){
+             post.add(post2);
+         } }
+
+
+return post;
+
+    }
+
+    public ResponseDto addPost(Post post) {
 
         ResponseDto responseDto = new ResponseDto();
 
@@ -61,7 +87,7 @@ public class PostServiceImpl implements PostService {
 
             responseDto.setVariables(true, 200, "Posted Successfully.");
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
 
             responseDto.setVariables(false, 500, ex.getMessage());
         }
