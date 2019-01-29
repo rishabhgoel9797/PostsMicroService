@@ -8,6 +8,15 @@ public class ResponseDto {
     Integer statusCode;
     Boolean status;
     JSONObject data;
+    String currentId;
+
+    public String getCurrentId() {
+        return currentId;
+    }
+
+    public void setCurrentId(String currentId) {
+        this.currentId = currentId;
+    }
 
     public String getMessage() {
         return message;

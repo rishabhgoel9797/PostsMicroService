@@ -68,4 +68,17 @@ public class PostDto {
     public void setDate() {
         this.date = new java.util.Date();
     }
+
+    @Override
+    public String toString() {
+        return "PostDto{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", date=" + date +
+                '}';
+    }
 }

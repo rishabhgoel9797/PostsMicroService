@@ -21,8 +21,9 @@ public class PostController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseDto addPost(@RequestBody PostDto postDto) {
         Post post = new Post();
-        postDto.setDate();
-        BeanUtils.copyProperties(postDto, post);
+
+        BeanUtils.copyProperties(postDto, post);        
+        post.setDate();
         ResponseDto responseDto = postService.addPost(post);
 
         return responseDto;
@@ -49,7 +50,7 @@ public class PostController {
         post.setDescription(description);
 
         return postService.editPost(post);
-    }
+    }                                 
 
     @RequestMapping(value = "/share", method = RequestMethod.POST)
     public ResponseDto sharePost(@RequestBody JSONObject sharePost){

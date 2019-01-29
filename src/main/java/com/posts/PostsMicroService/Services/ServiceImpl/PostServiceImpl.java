@@ -60,6 +60,7 @@ public class PostServiceImpl implements PostService {
             postRepository.insert(post);
 
             responseDto.setVariables(true, 200, "Posted Successfully.");
+            responseDto.setCurrentId(post.getPostId());
 
         } catch (Exception ex){
 
