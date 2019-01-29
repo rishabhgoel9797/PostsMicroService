@@ -5,6 +5,7 @@ import com.posts.PostsMicroService.Entity.Post;
 import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Repository.PostRepository;
 import com.posts.PostsMicroService.Services.PostService;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ postRepository.delete(postId);
     }
 
     @Override
+<<<<<<< HEAD
     public Post findOnePost(String postId) {
         return postRepository.findOne(postId);
     }
@@ -66,6 +68,26 @@ postRepository.delete(postId);
 
 
         postRepository.save(post);
+=======
+    public void addLikes(String postId, String userId) {
+        Post post= postRepository.findOne(postId);
+        post.getPostLikes().add(userId);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void dislike(String postId, String userId) {
+        Post post=postRepository.findOne(postId);
+        post.getPostLikes().remove(userId);
+        postRepository.save(post);
+
+    }
+
+    @Override
+    public Boolean getLikeStatus(String postId, String userId) {
+       return postRepository.findOne(userId).getPostLikes().contains(userId);
+
+>>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
     }
 
 

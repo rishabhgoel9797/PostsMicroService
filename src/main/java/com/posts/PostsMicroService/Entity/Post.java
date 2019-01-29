@@ -4,6 +4,12 @@ package com.posts.PostsMicroService.Entity;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 
+<<<<<<< HEAD
+=======
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
+        import java.util.Date;
+>>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
         import java.util.List;
 
 @Document(collection = "Post")
@@ -12,10 +18,12 @@ public class Post {
     @Id
     private String postId;
     private String userId;
-    private String type;
+    private String url;
     private String description;
     private String createdBy;
-    private Timestamp timestamp ;
+    private Date date;
+    private List<String> postLikes;
+
 
 
     private List<PostsComments> postsComments;
@@ -36,12 +44,13 @@ public class Post {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+
+    public String getUrl() {
+        return url;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -60,12 +69,38 @@ public class Post {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+
+    public String getDate() {
+        return null;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp =  timestamp;
+    public void setDate(Date date) {
+
+                this.date = new java.util.Date();
+
+
+
+    }
+
+    public List<String> getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(List<String> postLikes) {
+        this.postLikes = postLikes;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", url='" + url + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", date=" + date +
+                ", postLikes=" + postLikes +
+                '}';
     }
 
     public List<PostsComments> getPostsComments() {

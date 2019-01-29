@@ -2,15 +2,20 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class PostDto {
     private String postId;
     private String userId;
-    private String type;
+    private String url;
     private String description;
     private String createdBy;
-    private Timestamp timestamp ;
+    private Date date ;
+    private List<String> postLikes;
+
 
 
 
@@ -30,12 +35,12 @@ public class PostDto {
         this.userId = userId;
     }
 
-    public String getType() {
-        return type;
+    public String getUrl() {
+        return url;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDescription() {
@@ -54,12 +59,38 @@ public class PostDto {
         this.createdBy = createdBy;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public Date getDate() {
+        return this.date;
     }
 
-    public void setTimestamp() {
-        this.timestamp =  new Timestamp(System.currentTimeMillis());
+    public void setDate() {
+
+        this.date = new java.util.Date();
+
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public List<String> getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(List<String> postLikes) {
+        this.postLikes = postLikes;
+    }
+    @Override
+    public String toString() {
+        return "PostDto{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", url='" + url + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", date=" + date +
+                ", postLikes=" + postLikes +
+                '}';
     }
 
 

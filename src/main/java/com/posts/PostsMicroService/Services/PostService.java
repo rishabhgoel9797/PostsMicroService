@@ -10,6 +10,7 @@ public interface  PostService {
     void deletePost(String postId);
     void editPost(Post post);
     Post getPostDetails(String postId);
+<<<<<<< HEAD
     Post findOnePost(String postId);
     void deleteParentComments(Post post,String commentId);
 
@@ -17,6 +18,11 @@ public interface  PostService {
 
    // Post addReplies(Post post,List<PostsComments> comments,String commentId,String userId,String reply);
 
+=======
+    void addLikes(String postId,String userId);
+    void dislike(String postId,String userId);
+    Boolean getLikeStatus(String postId,String userId);
+>>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
 
 }
 
