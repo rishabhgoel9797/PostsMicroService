@@ -8,6 +8,7 @@ public class PostDto {
     private String postId;
     private String userId;
     private String url;
+    private String type;
     private String description;
     private String createdBy;
     private Date date ;
@@ -48,12 +49,20 @@ public class PostDto {
         return createdBy;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Long getDate() {
-        return date.getTime();
+    public Date getDate() {
+        return date;
     }
 
     public void setDate() {
