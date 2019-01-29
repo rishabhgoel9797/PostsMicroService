@@ -1,13 +1,19 @@
 package com.posts.PostsMicroService.Controller;
 
+import com.posts.PostsMicroService.Entity.NestedPostComments;
 import com.posts.PostsMicroService.Entity.Post;
 import com.posts.PostsMicroService.DTO.PostDto;
+import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Services.PostService;
+import javafx.geometry.Pos;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -50,4 +56,86 @@ public class PostController {
         postService.editPost(post);
         return new ResponseEntity<String>("Edited ", HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/addComment/{postId}",method = RequestMethod.PUT)
+    public Post addComment(@PathVariable String postId,@RequestParam String userId,@RequestParam String description)
+    {
+        Post post=postService.findOnePost(postId);
+        List<PostsComments> allPostsComments;
+        if(post.getPostsComments()==null)
+        {
+            allPostsComments=new ArrayList<>();
+        }
+        else
+        {
+            allPostsComments=post.getPostsComments();
+        }
+        PostsComments postsComments=new PostsComments();
+        postsComments.setCommentId();
+        postsComments.setUserId(userId);
+        postsComments.setDescription(description);
+
+        allPostsComments.add(postsComments);
+        System.out.println(allPostsComments.toString());
+        post.setPostsComments(allPostsComments);
+
+        postService.editPost(post);
+        return post;
+    }
+
+    @RequestMapping(value = "addReply/{postId}/{commentId}",method = RequestMethod.PUT)
+    public void addReply(@PathVariable String postId,@PathVariable String commentId,@RequestParam String userId, @RequestParam String reply)
+    {
+        Post post=postService.findOnePost(postId);
+        List<PostsComments> comments=post.getPostsComments();
+
+        List<NestedPostComments> replies;
+
+        PostsComments getComment=null;
+
+            for (PostsComments comment:comments)
+            {
+                if(comment.getCommentId()!=null)
+                {
+                    if(comment.getCommentId().equalsIgnoreCase(commentId))
+                    {
+                        getComment=comment;
+                    }
+                }
+            }
+
+            if(getComment.getNestedPostComments()==null)
+            {
+                replies=new ArrayList<>();
+            }
+            else
+            {
+                replies=getComment.getNestedPostComments();
+            }
+        NestedPostComments nestedPostComments=new NestedPostComments();
+            nestedPostComments.setUserId(userId);
+            nestedPostComments.setReply(reply);
+
+            replies.add(nestedPostComments);
+            getComment.setNestedPostComments(replies);
+
+
+            postService.editPost(post);
+    }
+
+    @RequestMapping(value = "deleteComment/{postId}/{commentId}",method = RequestMethod.PUT)
+    public String deleteParentComment(@PathVariable String postId,@PathVariable String commentId)
+    {
+        Post post=postService.findOnePost(postId);
+        postService.deleteParentComments(post,commentId);
+
+        return "Deleted";
+    }
+
+    @RequestMapping(value = "editComment/",method = RequestMethod.PUT)
+    public String editComment()
+    {
+        return "Edited";
+    }
+
 }

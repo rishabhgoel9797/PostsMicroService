@@ -3,6 +3,9 @@ package com.posts.PostsMicroService.Entity;
         import com.sun.jmx.snmp.Timestamp;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
+
+        import java.util.List;
+
 @Document(collection = "Post")
 public class Post {
 
@@ -13,6 +16,9 @@ public class Post {
     private String description;
     private String createdBy;
     private Timestamp timestamp ;
+
+
+    private List<PostsComments> postsComments;
 
     public String getPostId() {
         return postId;
@@ -60,5 +66,26 @@ public class Post {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp =  timestamp;
+    }
+
+    public List<PostsComments> getPostsComments() {
+        return postsComments;
+    }
+
+    public void setPostsComments(List<PostsComments> postsComments) {
+        this.postsComments = postsComments;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", timestamp=" + timestamp +
+                ", postsComments=" + postsComments +
+                '}';
     }
 }

@@ -2,6 +2,8 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
+import java.util.List;
+
 public class PostDto {
     private String postId;
     private String userId;
@@ -9,6 +11,8 @@ public class PostDto {
     private String description;
     private String createdBy;
     private Timestamp timestamp ;
+
+
 
     public String getPostId() {
         return postId;
@@ -57,4 +61,6 @@ public class PostDto {
     public void setTimestamp() {
         this.timestamp =  new Timestamp(System.currentTimeMillis());
     }
+
+
 }
