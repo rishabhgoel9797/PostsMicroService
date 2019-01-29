@@ -4,6 +4,8 @@ package com.posts.PostsMicroService.Entity;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
         import java.util.Date;
 
 @Document(collection = "Post")
@@ -59,12 +61,16 @@ public class Post {
     }
 
 
-    public Long getDate() {
-        return date.getTime();
+    public String getDate() {
+        return null;
     }
 
     public void setDate(Date date) {
-        this.date = new java.util.Date();
+
+                this.date = new java.util.Date();
+
+
+
     }
 
     @Override

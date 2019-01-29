@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 @CrossOrigin
 @RestController
@@ -21,6 +25,7 @@ public class PostController {
         Post post = new Post();
         postDto.setDate();
         BeanUtils.copyProperties(postDto, post);
+        System.out.println(post.getDate());
         postService.addPost(post);
         return new ResponseEntity<String>("Added New Post", HttpStatus.CREATED);
     }
@@ -29,15 +34,14 @@ public class PostController {
     public Post getPostDetails(@PathVariable String id)
     {
       Post post=postService.getPostDetails(id);
-      post.toString();
-        return postService.getPostDetails(id);
+        return post;
     }
 
     @RequestMapping(value ="/deletePost/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<String> deletePost(@PathVariable String id)
     {
         postService.deletePost(id);
-      return new ResponseEntity<String>("Deleted product",HttpStatus.OK);
+      return new ResponseEntity<String>("Deleted post",HttpStatus.OK);
     }
 
 
@@ -48,5 +52,14 @@ String description=postDto.getDescription();
        post.setDescription(description);
         postService.editPost(post);
         return new ResponseEntity<String>("Edited ", HttpStatus.OK);
+    }
+    @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
+    public Post getFeedDetails(@PathVariable String id)
+    {
+        RestTemplate restTemplate1=new RestTemplate();
+    }
+        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
+        Post post=postService.getPostDetails(id);
+        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
     }
 }

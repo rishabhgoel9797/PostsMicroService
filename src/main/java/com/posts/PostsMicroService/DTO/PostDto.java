@@ -2,6 +2,8 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PostDto {
@@ -52,11 +54,13 @@ public class PostDto {
         this.createdBy = createdBy;
     }
 
-    public Long getDate() {
-        return date.getTime();
+    public Date getDate() {
+        return this.date;
     }
 
     public void setDate() {
+
         this.date = new java.util.Date();
+
     }
 }
