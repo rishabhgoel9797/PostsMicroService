@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,10 +55,8 @@ String description=postDto.getDescription();
     @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
     public Post getFeedDetails(@PathVariable String id)
     {
-        RestTemplate restTemplate1=new RestTemplate();
-    }
-        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
+
         Post post=postService.getPostDetails(id);
-        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
+        return post;
     }
 }
