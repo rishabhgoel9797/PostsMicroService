@@ -4,12 +4,10 @@ package com.posts.PostsMicroService.Entity;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 
-<<<<<<< HEAD
-=======
         import java.text.DateFormat;
         import java.text.SimpleDateFormat;
         import java.util.Date;
->>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
+
         import java.util.List;
 
 @Document(collection = "Post")
@@ -90,18 +88,7 @@ public class Post {
         this.postLikes = postLikes;
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId='" + postId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", url='" + url + '\'' +
-                ", description='" + description + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", date=" + date +
-                ", postLikes=" + postLikes +
-                '}';
-    }
+
 
     public List<PostsComments> getPostsComments() {
         return postsComments;
@@ -116,10 +103,11 @@ public class Post {
         return "Post{" +
                 "postId='" + postId + '\'' +
                 ", userId='" + userId + '\'' +
-                ", type='" + type + '\'' +
+                ", url='" + url + '\'' +
                 ", description='" + description + '\'' +
                 ", createdBy='" + createdBy + '\'' +
-                ", timestamp=" + timestamp +
+                ", date=" + date +
+                ", postLikes=" + postLikes +
                 ", postsComments=" + postsComments +
                 '}';
     }

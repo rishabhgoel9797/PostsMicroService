@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ postRepository.delete(postId);
     }
 
     @Override
-<<<<<<< HEAD
+
     public Post findOnePost(String postId) {
         return postRepository.findOne(postId);
     }
@@ -64,11 +65,61 @@ postRepository.delete(postId);
     }
 
     @Override
-    public void editParentComments(Post post, String commentId) {
+    public void editParentComments(Post post, String commentId,String description) {
 
+        List<PostsComments> comments=post.getPostsComments();
+
+        List<PostsComments> edittedList=new ArrayList<>();
+
+       // PostsComments updateComment=null;
+
+        for (PostsComments editComment:comments)
+        {
+            System.out.println(commentId);
+            if(editComment.getCommentId()!=null&&editComment.getCommentId().equalsIgnoreCase(commentId))
+            {
+                editComment.setDescription(description);
+            }
+            edittedList.add(editComment);
+        }
+//        updateComment.setDescription(description);
+//        comments.add(updateComment);
+        post.setPostsComments(edittedList);
+        postRepository.save(post);
+
+
+    }
+
+    @Override
+    public void deleteNestedComment(Post post, String commentId, String nestedCommentId) {
+        List<PostsComments> comments=post.getPostsComments();
+        PostsComments postsComments=null;
+
+        for (PostsComments mainComment:comments)
+        {
+            if(mainComment.getCommentId()!=null&&mainComment.getCommentId().equalsIgnoreCase(commentId))
+            {
+                postsComments=mainComment;
+            }
+        }
+
+        List<NestedPostComments> nestedPostComments=postsComments.getNestedPostComments();
+        for (NestedPostComments nested:nestedPostComments)
+        {
+            if(nested.getNestedCommentId()!=null&&nested.getNestedCommentId().equalsIgnoreCase(nestedCommentId))
+            {
+                nestedPostComments.remove(nested);
+            }
+        }
+        postsComments.setNestedPostComments(nestedPostComments);
+        post.setPostsComments(comments);
 
         postRepository.save(post);
-=======
+
+
+    }
+
+    @Override
     public void addLikes(String postId, String userId) {
         Post post= postRepository.findOne(postId);
         post.getPostLikes().add(userId);
@@ -87,7 +138,6 @@ postRepository.delete(postId);
     public Boolean getLikeStatus(String postId, String userId) {
        return postRepository.findOne(userId).getPostLikes().contains(userId);
 
->>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
     }
 
 

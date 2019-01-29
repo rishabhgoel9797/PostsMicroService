@@ -116,6 +116,7 @@ public class PostController {
         NestedPostComments nestedPostComments=new NestedPostComments();
             nestedPostComments.setUserId(userId);
             nestedPostComments.setReply(reply);
+            nestedPostComments.setNestedCommentId();
 
             replies.add(nestedPostComments);
             getComment.setNestedPostComments(replies);
@@ -133,20 +134,23 @@ public class PostController {
         return "Deleted";
     }
 
-    @RequestMapping(value = "editComment/",method = RequestMethod.PUT)
-    public String editComment()
+    @RequestMapping(value = "editComment/{postId}/{commentId}",method = RequestMethod.PUT)
+    public String editComment(@PathVariable String postId,@PathVariable String commentId,@RequestParam String description)
     {
+        Post post=postService.findOnePost(postId);
+        postService.editParentComments(post,commentId,description);
         return "Edited";
     }
-//    @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
-//    public Post getFeedDetails(@PathVariable String id)
-//    {
-//        RestTemplate restTemplate1=new RestTemplate();
-//    }
-//        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
-//        Post post=postService.getPostDetails(id);
-//        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
-//    }
+
+    @RequestMapping(value = "deleteNestedComment/{postId}/{commentId}/{nestedCommentId}")
+    public String deleteNestedComment(@PathVariable String postId,@PathVariable String commentId,@PathVariable String nestedCommentId)
+    {
+        Post post=postService.findOnePost(postId);
+        postService.deleteNestedComment(post,commentId,nestedCommentId);
+        return "deleted";
+    }
+
+
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
     public ResponseEntity<String> likePost(@PathVariable String postId,@PathVariable String userId)
     {   try {
@@ -159,6 +163,7 @@ public class PostController {
         return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
     }
     }
+
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.DELETE)
     public ResponseEntity<String> dislikePost(@PathVariable String postId,@PathVariable String userId)
     {

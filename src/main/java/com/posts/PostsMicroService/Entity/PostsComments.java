@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class PostsComments {
 
+    @Id
     private String commentId;
     private String userId;
     private String description;
