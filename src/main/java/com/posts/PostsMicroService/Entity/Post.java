@@ -3,7 +3,10 @@ package com.posts.PostsMicroService.Entity;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
         import java.util.Date;
+        import java.util.List;
 
 @Document(collection = "Post")
 public class Post {
@@ -16,6 +19,11 @@ public class Post {
     private String description;
     private String createdBy;
     private Date date;
+    private List<String> postLikes;
+
+
+
+    private List<PostsComments> postsComments;
 
     public String getPostId() {
         return postId;
@@ -73,6 +81,24 @@ public class Post {
 
     public void setDate() {
         this.date = new java.util.Date();
+
+    }
+
+    public List<String> getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(List<String> postLikes) {
+        this.postLikes = postLikes;
+    }
+
+
+    public List<PostsComments> getPostsComments() {
+        return postsComments;
+    }
+
+    public void setPostsComments(List<PostsComments> postsComments) {
+        this.postsComments = postsComments;
     }
 
     @Override
@@ -81,9 +107,12 @@ public class Post {
                 "postId='" + postId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
                 ", description='" + description + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", date=" + date +
+                ", postLikes=" + postLikes +
+                ", postsComments=" + postsComments +
                 '}';
     }
 }
