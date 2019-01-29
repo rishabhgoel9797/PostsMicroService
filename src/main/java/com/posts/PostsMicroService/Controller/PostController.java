@@ -67,7 +67,6 @@ public class PostController {
         try {
             newPost.setUserId(userId);
             newPost.setDate();
-
             newPost.setCreatedBy(sourcePost.getCreatedBy());
             newPost.setDescription(sourcePost.getDescription());
 
