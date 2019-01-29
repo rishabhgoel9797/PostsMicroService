@@ -37,7 +37,7 @@ public class PostController {
     public ResponseEntity<String> deletePost(@PathVariable String id)
     {
         postService.deletePost(id);
-      return new ResponseEntity<String>("Deleted product",HttpStatus.OK);
+      return new ResponseEntity<String>("Deleted post",HttpStatus.OK);
     }
 
 
