@@ -1,5 +1,6 @@
 package com.posts.PostsMicroService.Entity;
 
+        import com.sun.jmx.snmp.Timestamp;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Post")
@@ -11,7 +12,7 @@ public class Post {
     private String type;
     private String description;
     private String createdBy;
-    private String date;
+    private Timestamp timestamp ;
 
     public String getPostId() {
         return postId;
@@ -53,11 +54,11 @@ public class Post {
         this.createdBy = createdBy;
     }
 
-    public String getDate() {
-        return date;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp =  timestamp;
     }
 }

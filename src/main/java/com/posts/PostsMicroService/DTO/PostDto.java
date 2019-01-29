@@ -1,12 +1,14 @@
 package com.posts.PostsMicroService.DTO;
 
+import com.sun.jmx.snmp.Timestamp;
+
 public class PostDto {
     private String postId;
     private String userId;
     private String type;
     private String description;
     private String createdBy;
-    private String date;
+    private Timestamp timestamp ;
 
     public String getPostId() {
         return postId;
@@ -48,13 +50,11 @@ public class PostDto {
         this.createdBy = createdBy;
     }
 
-    public String getDate() {
-        return date;
+    public Timestamp getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimestamp() {
+        this.timestamp =  new Timestamp(System.currentTimeMillis());
     }
-
-
 }
