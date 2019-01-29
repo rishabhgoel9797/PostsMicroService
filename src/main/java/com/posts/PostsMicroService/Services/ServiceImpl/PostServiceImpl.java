@@ -1,10 +1,6 @@
 package com.posts.PostsMicroService.Services.ServiceImpl;
 
-<<<<<<< HEAD
-import com.posts.PostsMicroService.DTO.ResponseDto;
-=======
 import com.posts.PostsMicroService.Entity.NestedPostComments;
->>>>>>> c5510ef31cbace3a70e60f3ec4c60583f85e0fbf
 import com.posts.PostsMicroService.Entity.Post;
 import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Repository.PostRepository;
@@ -13,6 +9,7 @@ import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,37 +20,19 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public ResponseDto deletePost(String postId) {
+    public void addPost(Post post) {
+        postRepository.insert(post);
 
-        ResponseDto responseDto = new ResponseDto();
-
-        try {
-            postRepository.delete(postId);
-            responseDto.setVariables(true, 200, "Deleted post successfully.");
-
-        } catch (Exception ex){
-
-            responseDto.setVariables(false, 500, "Unable to delete the post.");
-        }
-
-        return responseDto;
     }
 
     @Override
-    public ResponseDto editPost(Post post) {
+    public void deletePost(String postId) {
+postRepository.delete(postId);
+    }
 
-        ResponseDto responseDto = new ResponseDto();
-        try {
-            postRepository.save(post);
-
-            responseDto.setVariables(true, 200, "Post edited successfully.");
-        } catch (Exception ex){
-
-            responseDto.setVariables(false, 500, "Server error. Please try again later.");
-        }
-
-        return responseDto;
-
+    @Override
+    public void editPost(Post post) {
+        postRepository.save(post);
     }
 
     @Override
@@ -61,26 +40,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findOne(postId);
     }
 
-<<<<<<< HEAD
-    public ResponseDto addPost(Post post){
-
-        ResponseDto responseDto = new ResponseDto();
-
-        try {
-            postRepository.insert(post);
-
-            responseDto.setVariables(true, 200, "Posted Successfully.");
-            responseDto.setCurrentId(post.getPostId());
-
-        } catch (Exception ex){
-
-            responseDto.setVariables(false, 500, ex.getMessage());
-        }
-
-        return responseDto;
-=======
     @Override
-<<<<<<< HEAD
+
     public Post findOnePost(String postId) {
         return postRepository.findOne(postId);
     }
@@ -104,11 +65,61 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void editParentComments(Post post, String commentId) {
+    public void editParentComments(Post post, String commentId,String description) {
 
+        List<PostsComments> comments=post.getPostsComments();
+
+        List<PostsComments> edittedList=new ArrayList<>();
+
+       // PostsComments updateComment=null;
+
+        for (PostsComments editComment:comments)
+        {
+            System.out.println(commentId);
+            if(editComment.getCommentId()!=null&&editComment.getCommentId().equalsIgnoreCase(commentId))
+            {
+                editComment.setDescription(description);
+            }
+            edittedList.add(editComment);
+        }
+//        updateComment.setDescription(description);
+//        comments.add(updateComment);
+        post.setPostsComments(edittedList);
+        postRepository.save(post);
+
+
+    }
+
+    @Override
+    public void deleteNestedComment(Post post, String commentId, String nestedCommentId) {
+        List<PostsComments> comments=post.getPostsComments();
+        PostsComments postsComments=null;
+
+        for (PostsComments mainComment:comments)
+        {
+            if(mainComment.getCommentId()!=null&&mainComment.getCommentId().equalsIgnoreCase(commentId))
+            {
+                postsComments=mainComment;
+            }
+        }
+
+        List<NestedPostComments> nestedPostComments=postsComments.getNestedPostComments();
+        for (NestedPostComments nested:nestedPostComments)
+        {
+            if(nested.getNestedCommentId()!=null&&nested.getNestedCommentId().equalsIgnoreCase(nestedCommentId))
+            {
+                nestedPostComments.remove(nested);
+            }
+        }
+        postsComments.setNestedPostComments(nestedPostComments);
+        post.setPostsComments(comments);
 
         postRepository.save(post);
-=======
+
+
+    }
+
+    @Override
     public void addLikes(String postId, String userId) {
         Post post= postRepository.findOne(postId);
         post.getPostLikes().add(userId);
@@ -127,8 +138,6 @@ public class PostServiceImpl implements PostService {
     public Boolean getLikeStatus(String postId, String userId) {
        return postRepository.findOne(userId).getPostLikes().contains(userId);
 
->>>>>>> c16da8a5061b4a4cf389065c8a2520b4821e7bd4
->>>>>>> c5510ef31cbace3a70e60f3ec4c60583f85e0fbf
     }
 
 

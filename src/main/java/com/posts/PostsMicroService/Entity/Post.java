@@ -1,11 +1,13 @@
 package com.posts.PostsMicroService.Entity;
 
+        import com.sun.jmx.snmp.Timestamp;
         import org.springframework.data.annotation.Id;
         import org.springframework.data.mongodb.core.mapping.Document;
 
         import java.text.DateFormat;
         import java.text.SimpleDateFormat;
         import java.util.Date;
+
         import java.util.List;
 
 @Document(collection = "Post")
@@ -15,7 +17,6 @@ public class Post {
     private String postId;
     private String userId;
     private String url;
-    private String type;
     private String description;
     private String createdBy;
     private Date date;
@@ -50,14 +51,6 @@ public class Post {
         this.url = url;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -75,12 +68,15 @@ public class Post {
     }
 
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        return null;
     }
 
-    public void setDate() {
-        this.date = new java.util.Date();
+    public void setDate(Date date) {
+
+                this.date = new java.util.Date();
+
+
 
     }
 
@@ -91,6 +87,7 @@ public class Post {
     public void setPostLikes(List<String> postLikes) {
         this.postLikes = postLikes;
     }
+
 
 
     public List<PostsComments> getPostsComments() {
@@ -107,7 +104,6 @@ public class Post {
                 "postId='" + postId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", url='" + url + '\'' +
-                ", type='" + type + '\'' +
                 ", description='" + description + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", date=" + date +

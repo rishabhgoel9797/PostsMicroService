@@ -1,8 +1,25 @@
 package com.posts.PostsMicroService.Entity;
 
+import com.fasterxml.uuid.Generators;
+import org.springframework.data.annotation.Id;
+
+import java.util.UUID;
+
 public class NestedPostComments {
+
+    @Id
+    private String nestedCommentId;
     private String userId;
     private String reply;
+
+    public String getNestedCommentId() {
+        return nestedCommentId;
+    }
+
+    public void setNestedCommentId() {
+        UUID uuid=Generators.timeBasedGenerator().generate();
+        this.nestedCommentId = uuid.toString();
+    }
 
     public String getUserId() {
         return userId;
