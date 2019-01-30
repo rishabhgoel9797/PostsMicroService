@@ -21,8 +21,8 @@ public interface  PostService {
 
    // Post addReplies(Post post,List<PostsComments> comments,String commentId,String userId,String reply);
 
-    void addLikes(String postId,String userId);
-    void dislike(String postId,String userId);
+    void addLikes(String postId,String userId) throws Exception;
+    void dislike(String postId,String userId) throws Exception;
     Boolean getLikeStatus(String postId,String userId);
 
 

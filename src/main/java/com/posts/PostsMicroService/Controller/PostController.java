@@ -201,15 +201,13 @@ public class PostController {
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
     public ResponseEntity<String> likePost(@PathVariable String postId,@PathVariable String userId)
     {   try {
-        System.out.println(postId+" "+userId);
         if (postId.isEmpty() || userId.isEmpty())
-            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+            throw new Exception("Wrong Parameter");
         postService.addLikes(postId, userId);
         return new ResponseEntity<>("Liked", HttpStatus.ACCEPTED);
     }catch (Exception e)
     {
-        System.out.println(e.getMessage());
-        return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Error:"+e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     }
 
@@ -218,12 +216,12 @@ public class PostController {
     {
         try{
             if (postId.isEmpty() || userId.isEmpty())
-                return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+                throw new Exception("Wrong Parameter");
             postService.dislike(postId,userId);
             return new ResponseEntity<>("disLiked", HttpStatus.ACCEPTED);
         }catch (Exception e)
         {
-            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error:" + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -198,7 +198,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void addLikes(String postId, String userId) {
+    public void addLikes(String postId, String userId) throws Exception {
         Post post= postRepository.findOne(postId);
 
         List<String> likes;
@@ -209,14 +209,20 @@ public class PostServiceImpl implements PostService {
         else {
             likes = post.getPostLikes();
         }
+        if(likes.contains(userId))
+        {
+            throw new Exception("Already Liked");
+        }
         likes.add(userId);
         post.setPostLikes(likes);
         postRepository.save(post);
     }
 
     @Override
-    public void dislike(String postId, String userId) {
+    public void dislike(String postId, String userId) throws Exception {
         Post post=postRepository.findOne(postId);
+        if(!post.getPostLikes().contains(userId))
+            throw new Exception("No Likes for The User Found");
         post.getPostLikes().remove(userId);
         postRepository.save(post);
 
