@@ -39,6 +39,8 @@ public class PostController {
         Post post = new Post();
         BeanUtils.copyProperties(postDto, post);
         post.setDate();
+        if(post.getType().equalsIgnoreCase("text"))
+            post.setUrl("");
         post.setCreatedBy(post.getUserId());
         if(post.getDescription()==null)
             post.setDescription("");
@@ -144,7 +146,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/addComment/{postId}",method = RequestMethod.PUT)
-    public Post addComment(@PathVariable String postId,@RequestParam String userId,@RequestParam String userName,@RequestParam String description)
+    public ResponseDto addComment(@PathVariable String postId,@RequestParam String userId,@RequestParam String userName,@RequestParam String description)
     {
         Post post=postService.getPostDetails(postId);
         List<PostsComments> allPostsComments;
@@ -166,12 +168,11 @@ public class PostController {
         System.out.println(allPostsComments.toString());
         post.setPostsComments(allPostsComments);
 
-        postService.editPost(post);
-        return post;
+        return postService.editPost(post);
     }
 
     @RequestMapping(value = "addReply/{postId}/{commentId}",method = RequestMethod.PUT)
-    public void addReply(@PathVariable String postId,@PathVariable String commentId,@RequestParam String userId,@RequestParam String userName, @RequestParam String reply)
+    public ResponseDto addReply(@PathVariable String postId,@PathVariable String commentId,@RequestParam String userId,@RequestParam String userName, @RequestParam String reply)
     {
         Post post=postService.getPostDetails(postId);
         List<PostsComments> comments=post.getPostsComments();
@@ -209,24 +210,33 @@ public class PostController {
             getComment.setNestedPostComments(replies);
 
 
-            postService.editPost(post);
+            return postService.editPost(post);
     }
 
     @RequestMapping(value = "deleteComment/{postId}/{commentId}",method = RequestMethod.PUT)
-    public String deleteParentComment(@PathVariable String postId,@PathVariable String commentId)
+    public ResponseDto deleteParentComment(@PathVariable String postId,@PathVariable String commentId)
     {
         Post post=postService.getPostDetails(postId);
-        postService.deleteParentComments(post,commentId);
+        return postService.deleteParentComments(post,commentId);
 
-        return "Deleted";
     }
 
     @RequestMapping(value = "editComment/{postId}/{commentId}",method = RequestMethod.PUT)
-    public String editComment(@PathVariable String postId,@PathVariable String commentId,@RequestParam String description)
+    public ResponseDto editComment(@PathVariable String postId,@PathVariable String commentId,@RequestParam String description)
     {
         Post post=postService.getPostDetails(postId);
-        postService.editParentComments(post,commentId,description);
-        return "Edited";
+
+        return postService.editParentComments(post,commentId,description);
+
+    }
+
+    @RequestMapping(value = "deleteNestedComment/{postId}/{commentId}/{nestedCommentId}",method = RequestMethod.PUT)
+    public ResponseDto deleteNestedComment(@PathVariable String postId,@PathVariable String commentId,@PathVariable String nestedCommentId)
+    {
+        Post post=postService.getPostDetails(postId);
+
+        return postService.deleteNestedComment(post,commentId,nestedCommentId);
+
     }
 
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
@@ -235,9 +245,9 @@ public class PostController {
         try {
             if (postId.isEmpty() || userId.isEmpty())
                 throw new Exception("Wrong Parameter");
-            postService.addLikes(postId, userId);
-            responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
-            return responseDto;
+                postService.addLikes(postId, userId);
+                responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
+                return responseDto;
         }catch (Exception e)
         {
             responseDto.setVariables(false,HttpServletResponse.SC_BAD_REQUEST,e.getMessage());

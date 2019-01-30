@@ -13,9 +13,10 @@ public interface  PostService {
     Post getPostDetails(String postId);
     ResponseDto addPost(Post post);
 
-    void deleteParentComments(Post post,String commentId);
+    ResponseDto deleteParentComments(Post post,String commentId);
 
-    void editParentComments(Post post,String commentId,String description);
+    ResponseDto editParentComments(Post post,String commentId,String description);
+    ResponseDto deleteNestedComment(Post post,String commentId, String nestedCommentId);
 //    Post addReplies(Post post,List<PostsComments> comments,String commentId,String userId,String reply);
    List<Post> getfeed(List<String> userIds);
     void addLikes(String postId,String userId) throws Exception;

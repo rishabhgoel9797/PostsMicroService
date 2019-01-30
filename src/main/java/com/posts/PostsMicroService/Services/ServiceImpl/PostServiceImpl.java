@@ -3,6 +3,7 @@ package com.posts.PostsMicroService.Services.ServiceImpl;
 import com.posts.PostsMicroService.DTO.ResponseDto;
 
 //import com.posts.PostsMicroService.Entity.NestedPostComments;
+import com.posts.PostsMicroService.Entity.NestedPostComments;
 import com.posts.PostsMicroService.Entity.Post;
 //import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Entity.PostsComments;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -80,47 +82,103 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void editParentComments(Post post, String commentId,String description) {
+    public ResponseDto editParentComments(Post post, String commentId,String description) {
 
         List<PostsComments> comments=post.getPostsComments();
 
         List<PostsComments> edittedList=new ArrayList<>();
 
-        // PostsComments updateComment=null;
+        ResponseDto responseDto = new ResponseDto();
 
-        for (PostsComments editComment:comments)
-        {
-            System.out.println(commentId);
-            if(editComment.getCommentId()!=null && editComment.getCommentId().equalsIgnoreCase(commentId))
-            {
-                editComment.setDescription(description);
+        try {
+            for (PostsComments editComment : comments) {
+
+                if (editComment.getCommentId() != null && editComment.getCommentId().equalsIgnoreCase(commentId)) {
+                    editComment.setDescription(description);
+                }
+                edittedList.add(editComment);
             }
-            edittedList.add(editComment);
+
+            post.setPostsComments(edittedList);
+            postRepository.save(post);
+
+            responseDto.setVariables(true, 200, "Comment edited successfully.");
+
+        } catch (Exception ex){
+
+            responseDto.setVariables(false, 500, "Error in editing comments. Please try again later.");
         }
-//        updateComment.setDescription(description);
-//        comments.add(updateComment);
-        post.setPostsComments(edittedList);
-        postRepository.save(post);
-
-
+        return responseDto;
     }
 
 
-        public void deleteParentComments(Post post,String commentId) {
+    public ResponseDto deleteParentComments(Post post,String commentId) {
         List<PostsComments> comments=post.getPostsComments();
 
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            PostsComments tempParentComment = null;
 
-        for(PostsComments singleComment:comments)
-        {
-            if(singleComment.getCommentId().equalsIgnoreCase(commentId))
-            {
-                comments.remove(singleComment);
+            for (PostsComments singleComment : comments) {
+                if (singleComment.getCommentId().equalsIgnoreCase(commentId)) {
+                    tempParentComment = singleComment;
+
+                }
             }
+            comments.remove(tempParentComment);
+
+            post.setPostsComments(comments);
+
+            postRepository.save(post);
+
+            responseDto.setVariables(true, 200, "Comment deleted successfully.");
+
+        }catch (Exception ex){
+            responseDto.setVariables(false, 500, "Error in deleting comment.");
         }
 
-        post.setPostsComments(comments);
+        return responseDto;
+    }
 
-        postRepository.save(post);
+
+    @Override
+    public ResponseDto deleteNestedComment(Post post, String commentId, String nestedCommentId) {
+        List<PostsComments> comments=post.getPostsComments();
+        PostsComments postsComments=null;
+        ResponseDto responseDto = new ResponseDto();
+        try {
+
+            for (PostsComments mainComment : comments) {
+                if (mainComment.getCommentId() != null && mainComment.getCommentId().equalsIgnoreCase(commentId)) {
+                    postsComments = mainComment;
+                }
+            }
+            NestedPostComments tempComments = new NestedPostComments();
+            List<NestedPostComments> nestedPostComments = postsComments.getNestedPostComments();
+            for (NestedPostComments nested : nestedPostComments) {
+                if (nested.getNestedCommentId() != null && nested.getNestedCommentId().equalsIgnoreCase(nestedCommentId)) {
+                    tempComments = nested;
+                }
+            }
+            nestedPostComments.remove(tempComments);
+
+            if (nestedPostComments == null) {
+                nestedPostComments = Collections.emptyList();
+            }
+            postsComments.setNestedPostComments(nestedPostComments);
+            post.setPostsComments(comments);
+
+            postRepository.save(post);
+
+            responseDto.setVariables(true, 200, "Deleted comment successfully.");
+
+        } catch (Exception ex){
+
+            responseDto.setVariables(false, 500, "Error in deleting comment. Please try again later.");
+        }
+
+        return responseDto;
+
     }
 
 //    @Override
