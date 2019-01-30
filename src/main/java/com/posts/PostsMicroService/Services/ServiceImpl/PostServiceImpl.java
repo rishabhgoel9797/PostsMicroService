@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -241,7 +242,7 @@ public void addLikes(String postId, String userId) throws Exception {
                 post.add(post2);
             }
         }
-
+        Collections.sort(post, (o1, o2) -> o2.getDate().compareTo(o1.getDate()));
 
         return post;
 

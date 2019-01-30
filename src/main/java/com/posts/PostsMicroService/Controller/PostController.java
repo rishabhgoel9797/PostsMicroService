@@ -122,7 +122,7 @@ public class PostController {
         {
            followerId.add (follower.getUserId());
         }
-       followerId.add(id);
+//       followerId.add(id);
         List<Post> post = postService.getfeed(followerId);
 
         for(Post post1:post){
