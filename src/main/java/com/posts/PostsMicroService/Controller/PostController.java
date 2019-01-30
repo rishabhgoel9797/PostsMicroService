@@ -9,6 +9,7 @@ import com.posts.PostsMicroService.DTO.PostDto;
 import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Services.PostService;
 
+import com.sun.deploy.net.HttpResponse;
 import org.json.simple.JSONObject;
 
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -199,29 +201,34 @@ public class PostController {
 
 
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
-    public ResponseEntity<String> likePost(@PathVariable String postId,@PathVariable String userId)
-    {   try {
+    public ResponseDto likePost(@PathVariable String postId,@PathVariable String userId)
+    {   ResponseDto responseDto=new ResponseDto();
+        try {
         if (postId.isEmpty() || userId.isEmpty())
             throw new Exception("Wrong Parameter");
         postService.addLikes(postId, userId);
-        return new ResponseEntity<>("Liked", HttpStatus.ACCEPTED);
+        responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
+        return responseDto;
     }catch (Exception e)
     {
-        return new ResponseEntity<>("Error:"+e.getMessage(), HttpStatus.BAD_REQUEST);
+        responseDto.setVariables(false,HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+        return responseDto;
     }
     }
 
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.DELETE)
-    public ResponseEntity<String> dislikePost(@PathVariable String postId,@PathVariable String userId)
-    {
+    public ResponseDto dislikePost(@PathVariable String postId,@PathVariable String userId)
+    {  ResponseDto responseDto=new ResponseDto();
         try{
             if (postId.isEmpty() || userId.isEmpty())
                 throw new Exception("Wrong Parameter");
             postService.dislike(postId,userId);
-            return new ResponseEntity<>("disLiked", HttpStatus.ACCEPTED);
+            responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
+            return responseDto;
         }catch (Exception e)
         {
-            return new ResponseEntity<>("Error:" + e.getMessage(), HttpStatus.BAD_REQUEST);
+            responseDto.setVariables(false,HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+            return responseDto;
         }
     }
 
