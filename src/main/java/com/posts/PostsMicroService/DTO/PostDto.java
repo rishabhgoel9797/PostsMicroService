@@ -2,7 +2,10 @@ package com.posts.PostsMicroService.DTO;
 
 import com.sun.jmx.snmp.Timestamp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class PostDto {
     private String postId;
@@ -12,6 +15,10 @@ public class PostDto {
     private String description;
     private String createdBy;
     private Date date ;
+    private List<String> postLikes;
+
+
+
 
     public String getPostId() {
         return postId;
@@ -62,10 +69,40 @@ public class PostDto {
     }
 
     public Date getDate() {
-        return date;
+//        return date;
+        return this.date;
     }
 
     public void setDate() {
+
         this.date = new java.util.Date();
+
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public List<String> getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(List<String> postLikes) {
+        this.postLikes = postLikes;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PostDto{" +
+                "postId='" + postId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", date=" + date +
+                ", postLikes=" + postLikes +
+                '}';
     }
 }
