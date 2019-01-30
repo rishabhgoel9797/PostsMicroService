@@ -2,12 +2,14 @@ package com.posts.PostsMicroService.DTO;
 
 import org.json.simple.JSONObject;
 
+import java.util.List;
+
 public class ResponseDto {
 
     String message;
     Integer statusCode;
     Boolean status;
-    JSONObject data;
+    List<JSONObject> data;
 
     public String getMessage() {
         return message;
@@ -33,15 +35,16 @@ public class ResponseDto {
         this.status = status;
     }
 
-    public JSONObject getData() {
+    public List<JSONObject> getData() {
         return data;
     }
 
-    public void setData(JSONObject data) {
+    public void setData(List<JSONObject> data) {
         this.data = data;
     }
 
     public void setVariables(Boolean status, Integer code, String message){
+
         this.setStatusCode(code);
         this.setStatus(status);
         this.setMessage(message);
@@ -53,7 +56,6 @@ public class ResponseDto {
                 "message='" + message + '\'' +
                 ", statusCode=" + statusCode +
                 ", status=" + status +
-                ", data=" + data +
                 '}';
     }
 }

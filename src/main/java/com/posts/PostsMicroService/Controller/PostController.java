@@ -1,8 +1,13 @@
 package com.posts.PostsMicroService.Controller;
 
+import com.posts.PostsMicroService.DTO.FeedWrapper;
+import com.posts.PostsMicroService.DTO.PostWrapper;
 import com.posts.PostsMicroService.DTO.ResponseDto;
+import com.posts.PostsMicroService.Entity.Feeds;
+import com.posts.PostsMicroService.Entity.NestedPostComments;
 import com.posts.PostsMicroService.Entity.Post;
 import com.posts.PostsMicroService.DTO.PostDto;
+import com.posts.PostsMicroService.Entity.PostsComments;
 import com.posts.PostsMicroService.Services.PostService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin
@@ -31,12 +39,21 @@ public class PostController {
         Post post = new Post();
         BeanUtils.copyProperties(postDto, post);
         post.setDate();
+        post.setCreatedBy(post.getUserId());
+        if(post.getDescription()==null)
+            post.setDescription("");
+        if(post.getPostLikes()==null)
+            post.setPostLikes(Collections.emptyList());
+        if(post.getPostsComments()==null)
+            post.setPostsComments(Collections.emptyList());
         ResponseDto responseDto = postService.addPost(post);
         return responseDto;
     }
 
-    @RequestMapping(value = "/getPost", method = RequestMethod.GET)
-    public Post getPostDetails(@RequestParam String id) {
+    @RequestMapping(value = "/getPost/{id}", method = RequestMethod.GET)
+    public Post getPostDetails(@PathVariable String id) {
+        Post post=postService.getPostDetails(id);
+
         return postService.getPostDetails(id);
     }
 
@@ -82,33 +99,81 @@ public class PostController {
         return responseDto;
     }
 
-
     @RequestMapping(value = "/findByUserId/{id}", method = RequestMethod.GET)
-
-
-    public List<Post> findByName(@PathVariable String id){
-        return postService.getUserPost(id);
+    public PostWrapper findByName(@PathVariable String id){
+        PostWrapper postWrapper=new PostWrapper();
+        postWrapper.setPostList(postService.getUserPost(id));
+        return postWrapper;
 }
 
     @RequestMapping(value = "/userWall/{id}", method = RequestMethod.GET)
-         public List<Post> userWall(@PathVariable String id){
+         public FeedWrapper userWall(@PathVariable String id){
         RestTemplate restTemplate1 = new RestTemplate();
+         List<Feeds> feeds =new ArrayList<>();
+        String getURL = userProfileUrl + "follow/getFollowerDetails/" + id;
 
-        String getURL = userProfileUrl + "/follow/getFollow?id=" + id;
-
-        ResponseEntity<List<String>> responseEntity = restTemplate1.exchange(getURL, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
+        ResponseEntity<List<Follower>> responseEntity = restTemplate1.exchange(getURL, HttpMethod.GET, null, new ParameterizedTypeReference<List<Follower>>() {
         });
-        List<String> followerId = responseEntity.getBody();
-        followerId.add(id);
+        List<Follower> followers = responseEntity.getBody();
+        List<String> followerId=new ArrayList<>();
+        for(Follower follower:followers)
+        {
+           followerId.add (follower.getUserId());
+        }
+       followerId.add(id);
         List<Post> post = postService.getfeed(followerId);
 
+        for(Post post1:post){
+            for(Follower follower:followers){
+                if(follower.getUserId().equals(post1.getUserId()))
+                {
+                    Feeds feed =new Feeds();
+                    feed.setPost(post1);
+                    feed.setUserId(follower.getUserId());
+                    feed.setImage(follower.getUserImageURL());
+                    feed.setUsername(follower.getUsername());
+                    feeds.add(feed);
+                }
+
+            }
+
+        }
+        FeedWrapper feedWrapper=new FeedWrapper();
+        feedWrapper.setFeedsList(feeds);
+        return feedWrapper;
+    }
+
+    @RequestMapping(value = "/addComment/{postId}",method = RequestMethod.PUT)
+    public Post addComment(@PathVariable String postId,@RequestParam String userId,@RequestParam String userName,@RequestParam String description)
+    {
+        Post post=postService.getPostDetails(postId);
+        List<PostsComments> allPostsComments;
+        if(post.getPostsComments()==null)
+        {
+            allPostsComments=new ArrayList<>();
+        }
+        else
+        {
+            allPostsComments=post.getPostsComments();
+        }
+        PostsComments postsComments=new PostsComments();
+        postsComments.setCommentId();
+        postsComments.setUserId(userId);
+        postsComments.setUsername(userName);
+        postsComments.setDescription(description);
+
+        allPostsComments.add(postsComments);
+        System.out.println(allPostsComments.toString());
+        post.setPostsComments(allPostsComments);
+
+        postService.editPost(post);
         return post;
     }
 
     @RequestMapping(value = "addReply/{postId}/{commentId}",method = RequestMethod.PUT)
-    public void addReply(@PathVariable String postId,@PathVariable String commentId,@RequestParam String userId, @RequestParam String reply)
+    public void addReply(@PathVariable String postId,@PathVariable String commentId,@RequestParam String userId,@RequestParam String userName, @RequestParam String reply)
     {
-        Post post=postService.findOnePost(postId);
+        Post post=postService.getPostDetails(postId);
         List<PostsComments> comments=post.getPostsComments();
 
         List<NestedPostComments> replies;
@@ -135,8 +200,10 @@ public class PostController {
                 replies=getComment.getNestedPostComments();
             }
         NestedPostComments nestedPostComments=new NestedPostComments();
+            nestedPostComments.setNestedCommentId();
             nestedPostComments.setUserId(userId);
             nestedPostComments.setReply(reply);
+            nestedPostComments.setUsername(userName);
 
             replies.add(nestedPostComments);
             getComment.setNestedPostComments(replies);
@@ -148,51 +215,50 @@ public class PostController {
     @RequestMapping(value = "deleteComment/{postId}/{commentId}",method = RequestMethod.PUT)
     public String deleteParentComment(@PathVariable String postId,@PathVariable String commentId)
     {
-        Post post=postService.findOnePost(postId);
+        Post post=postService.getPostDetails(postId);
         postService.deleteParentComments(post,commentId);
 
         return "Deleted";
     }
 
-    @RequestMapping(value = "editComment/",method = RequestMethod.PUT)
-    public String editComment()
+    @RequestMapping(value = "editComment/{postId}/{commentId}",method = RequestMethod.PUT)
+    public String editComment(@PathVariable String postId,@PathVariable String commentId,@RequestParam String description)
     {
+        Post post=postService.getPostDetails(postId);
+        postService.editParentComments(post,commentId,description);
         return "Edited";
     }
-//    @RequestMapping(value="/getFeeds/{id}" ,method = RequestMethod.GET)
-//    public Post getFeedDetails(@PathVariable String id)
-//    {
-//        RestTemplate restTemplate1=new RestTemplate();
-//    }
-//        String getURLMerchant="http://10.177.7.120:8080/getMerchantFromProductId/"+productShortList.getProductId();}
-//        Post post=postService.getPostDetails(id);
-//        ResponseEntity<List<MerchantDetailsDTO>> responseEntity1=restTemplate1.exchange(getURLMerchant, HttpMethod.GET, null, new ParameterizedTypeReference<List<MerchantDetailsDTO>>() {};return post;
-//    }
+
     @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.POST)
-    public ResponseEntity<String> likePost(@PathVariable String postId,@PathVariable String userId)
-    {   try {
-        if (postId.isEmpty() || userId.isEmpty())
-            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
-        postService.addLikes(postId, userId);
-        return new ResponseEntity<>("Liked", HttpStatus.ACCEPTED);
-    }catch (Exception e)
-    {
-        return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
-    }
-    }
-    @RequestMapping(value="/like/{postId}/{userId}",method = RequestMethod.DELETE)
-    public ResponseEntity<String> dislikePost(@PathVariable String postId,@PathVariable String userId)
-    {
-        try{
+    public ResponseDto likePost(@PathVariable String postId,@PathVariable String userId)
+    {   ResponseDto responseDto=new ResponseDto();
+        try {
             if (postId.isEmpty() || userId.isEmpty())
-                return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
-            postService.dislike(postId,userId);
-            return new ResponseEntity<>("disLiked", HttpStatus.ACCEPTED);
+                throw new Exception("Wrong Parameter");
+            postService.addLikes(postId, userId);
+            responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
+            return responseDto;
         }catch (Exception e)
         {
-            return new ResponseEntity<>("Wrong Parameter", HttpStatus.BAD_REQUEST);
+            responseDto.setVariables(false,HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+            return responseDto;
         }
     }
 
+    @RequestMapping(value="/dislike/{postId}/{userId}",method = RequestMethod.DELETE)
+    public ResponseDto dislikePost(@PathVariable String postId,@PathVariable String userId)
+    {  ResponseDto responseDto=new ResponseDto();
+        try{
+            if (postId.isEmpty() || userId.isEmpty())
+                throw new Exception("Wrong Parameter");
+            postService.dislike(postId,userId);
+            responseDto.setVariables(true, HttpServletResponse.SC_CREATED,"Liked");
+            return responseDto;
+        }catch (Exception e)
+        {
+            responseDto.setVariables(false,HttpServletResponse.SC_BAD_REQUEST,e.getMessage());
+            return responseDto;
+        }
+    }
 
 }

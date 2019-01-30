@@ -22,12 +22,12 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.8.0</version>
+
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.8.0</version>
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -43,21 +43,22 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<<<<<<< HEAD
+
+        <dependency>
+            <groupId>com.fasterxml.uuid</groupId>
+            <artifactId>java-uuid-generator</artifactId>
+            <version>3.1.4</version>
+        </dependency>
+
+
 		<dependency>
 		<groupId>com.googlecode.json-simple</groupId>
 		<artifactId>json-simple</artifactId>
-		<version>1.1.1</version>
+
 	</dependency>
-=======
 
-		<dependency>
-			<groupId>com.fasterxml.uuid</groupId>
-			<artifactId>java-uuid-generator</artifactId>
-			<version>3.1.4</version>
-		</dependency>
 
->>>>>>> c5510ef31cbace3a70e60f3ec4c60583f85e0fbf
+
 	</dependencies>
 
 	<build>

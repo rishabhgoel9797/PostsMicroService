@@ -3,14 +3,25 @@ package com.posts.PostsMicroService.Entity;
 import com.fasterxml.uuid.Generators;
 import org.springframework.data.annotation.Id;
 
+
 import java.util.List;
 import java.util.UUID;
+
 
 public class PostsComments {
 
     private String commentId;
     private String userId;
     private String description;
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     private List<NestedPostComments> nestedPostComments;
 
