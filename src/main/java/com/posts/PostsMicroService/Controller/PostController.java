@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin
@@ -32,6 +33,11 @@ public class PostController {
         postDto.setDate();
         BeanUtils.copyProperties(postDto, post);
         System.out.println(post.getDate());
+        if(post.getPostLikes()==null)
+            post.setPostLikes(Collections.emptyList());
+        if(post.getPostsComments()==null)
+            post.setPostsComments(Collections.emptyList());
+
         postService.addPost(post);
         return new ResponseEntity<String>("Added New Post", HttpStatus.CREATED);
     }
@@ -142,7 +148,7 @@ public class PostController {
         return "Edited";
     }
 
-    @RequestMapping(value = "deleteNestedComment/{postId}/{commentId}/{nestedCommentId}")
+    @RequestMapping(value = "deleteNestedComment/{postId}/{commentId}/{nestedCommentId}",method = RequestMethod.PUT)
     public String deleteNestedComment(@PathVariable String postId,@PathVariable String commentId,@PathVariable String nestedCommentId)
     {
         Post post=postService.findOnePost(postId);

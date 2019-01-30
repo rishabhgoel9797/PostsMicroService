@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/interest")
 public class interestsController {
 
 
@@ -36,7 +37,8 @@ public class interestsController {
         InterestDto interestDto=new InterestDto();
         interestDto.setInterests(intersts);
 
-
         return interestDto;
     }
+
+
 }
